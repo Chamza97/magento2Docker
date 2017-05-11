@@ -3,20 +3,22 @@ version: '3'
 services:
     http-server.magento2:
       image: nginx:1.13.0
+      working_dir: /var/application
       volumes:
-        - ./www/:/var/application/www
+        - ./:/var/application
         - ./nginx-custom/nginx.conf:/etc/nginx/conf.d/default.conf
+        - /etc/hosts:/etc/hosthosts
+      command: sh ./start_up_http_server.sh
       links:
         - worker.magento2
-
+#
     worker.magento2:
       build: php-fpm-custom
       working_dir: /var/application
-      command: sh ./start-up.sh ;
+      command: sh ./start_up_worker.sh ;
       volumes:
         - ./:/var/application
         - ./php-fpm-custom/php.ini:/usr/local/etc/php/php.ini
-        - /etc/hosts:/etc/hosthosts
       env_file:
         - ./install-magento.env
       links:
