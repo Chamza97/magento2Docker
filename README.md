@@ -1,15 +1,15 @@
 # Magento2 docker compose
 
-###prerequisite
+### prerequisite
 You should install docker and docker compose.
 
-###Magento2 install
+### Magento2 install
 
 Install full magento2 environment including magento2 pre-installed with sample data using only  **one** command line:
 ```sh
 docker-compose up
 ```
-###Test in browser
+### Test in browser
 Magento application is accessible on : [local.magento2](http://local.magento2)
 
 
