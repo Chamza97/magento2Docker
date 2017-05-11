@@ -11,7 +11,6 @@ services:
       command: sh ./start_up_http_server.sh
       links:
         - worker.magento2
-#
     worker.magento2:
       build: php-fpm-custom
       working_dir: /var/application
