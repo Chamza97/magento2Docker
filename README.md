@@ -1,7 +1,7 @@
 # Magento2 docker compose
 
 ### prerequisite
-You should install docker and docker compose.
+You should install docker and docker compose before using this repo to setup Magento2 environment.
 
 ### Magento2 install
 
