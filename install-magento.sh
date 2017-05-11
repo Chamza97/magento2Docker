@@ -1,17 +1,26 @@
-if [ ! -f ../www/composer.json ]; then
-composer config --global http-basic.repo.magento.com  d513194cb7498ee45e3c079d4b7f84f9  bbdca044e99d729250add110a9441a92 \
+if [ ! -f ./www/composer.json ]; then
+composer config --global http-basic.repo.magento.com  $MAG_PUBLIC_KEY  $MAG_PRIVATE_KEY \
   && composer create-project --repository-url=https://repo.magento.com/ \
-  magento/project-community-edition ../www -vvv
+  magento/project-community-edition ./www -vvv
 
 else
  echo 'Magento2 source code seems to be already downloaded - skipped'
 fi
 
-chmod u+x ../www/bin/magento
 
-../www/bin/magento setup:install \
+until mysql -h "db.magento2" -u "magento2" -pmagento2; do
+  >&2 echo "mariadb is unavailable - sleeping"
+  sleep 1
+done
+
+chmod u+x ./www/bin/magento
+
+(cd www && composer config  http-basic.repo.magento.com  $MAG_PUBLIC_KEY  $MAG_PRIVATE_KEY)
+./www/bin/magento sampledata:deploy
+
+./www/bin/magento setup:install \
 --base-url=http://local.magento2/ \
---db-host=database.magento2 \
+--db-host=db.magento2 \
 --db-name=magento2 \
 --db-user=magento2 \
 --db-password=magento2 \
@@ -28,5 +37,4 @@ chmod u+x ../www/bin/magento
 --use-sample-data
 
 
-
-chown -R www-data:www-data ../www
+chown -R www-data:www-data ./www
