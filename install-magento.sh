@@ -1,7 +1,7 @@
-if [ ! -f ./www/composer.json ]; then
+if [ ! -f ./src/composer.json ]; then
 composer config --global http-basic.repo.magento.com  $MAG_PUBLIC_KEY  $MAG_PRIVATE_KEY \
   && composer create-project --repository-url=https://repo.magento.com/ \
-  magento/project-community-edition ./www -vvv
+  magento/project-community-edition ./src -vvv
 
 else
  echo 'Magento2 source code seems to be already downloaded - skipped'
@@ -13,12 +13,12 @@ until mysql -h "db.magento2" -u "magento2" -pmagento2; do
   sleep 1
 done
 
-chmod u+x ./www/bin/magento
+chmod u+x ./src/bin/magento
 
-(cd www && composer config  http-basic.repo.magento.com  $MAG_PUBLIC_KEY  $MAG_PRIVATE_KEY)
-./www/bin/magento sampledata:deploy
+(cd src && composer config  http-basic.repo.magento.com  $MAG_PUBLIC_KEY  $MAG_PRIVATE_KEY)
+./src/bin/magento sampledata:deploy
 
-./www/bin/magento setup:install \
+./src/bin/magento setup:install \
 --base-url=http://local.magento2/ \
 --db-host=db.magento2 \
 --db-name=magento2 \
@@ -37,4 +37,4 @@ chmod u+x ./www/bin/magento
 --use-sample-data
 
 
-chown -R www-data:www-data ./www
+chown -R www-data:www-data ./src

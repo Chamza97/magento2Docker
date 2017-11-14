@@ -34,3 +34,6 @@ RUN docker-php-ext-install \
 #install composer
 RUN curl https://getcomposer.org/installer  \
    | php -- --filename=composer --install-dir=/bin
+
+#setup user access
+RUN usermod -u 1000 www-data
