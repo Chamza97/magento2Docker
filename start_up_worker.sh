@@ -1,2 +1,2 @@
-sh ./install-magento.sh
+bash ./install-magento.sh
 php-fpm

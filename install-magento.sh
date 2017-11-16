@@ -1,21 +1,23 @@
-#if [ ! -f ./src/composer.json ]; then
-#composer config --global http-basic.repo.magento.com  $MAG_PUBLIC_KEY  $MAG_PRIVATE_KEY \
-#  && composer create-project --repository-url=https://repo.magento.com/ \
-#  magento/project-community-edition ./src -vvv
-#
-#else
-# echo 'Magento2 source code seems to be already downloaded - skipped'
-#fi
-#
-#
-#until mysql -h "db.magento2" -u "magento2" -pmagento2; do
-#  >&2 echo "mariadb is unavailable - sleeping"
-#  sleep 1
-#done
-#
-#chmod u+x ./src/bin/magento
+#!/bin/bash
+if [ ! -f ./src/composer.json ]; then
+composer config --global http-basic.repo.magento.com  $MAG_PUBLIC_KEY  $MAG_PRIVATE_KEY \
+  && composer create-project --repository-url=https://repo.magento.com/ \
+  magento/project-community-edition ./src -vvv
 
-if [[ ! $(mysql -h "db.magento2" -u "magento2" -pmagento2 -e "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='magento2'") ]]; then
+else
+ echo 'Magento2 source code seems to be already downloaded - skipped'
+fi
+
+
+until mysql -h "db.magento2" -u "magento2" -pmagento2; do
+  >&2 echo "mariadb is unavailable - sleeping"
+  sleep 1
+done
+
+chmod u+x ./src/bin/magento
+
+if [[ ! $(mysql -h "db.magento2" -u "magento2" -pmagento2 -e "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME='magento2'") ]]
+then
     (cd src && composer config  http-basic.repo.magento.com  $MAG_PUBLIC_KEY  $MAG_PRIVATE_KEY) ;
     ./src/bin/magento sampledata:deploy ;
 
@@ -40,4 +42,4 @@ else
     echo "Magento2 seems installed - skipped"
 fi
 
-#chown -R www-data:www-data ./src
+chown -R www-data:www-data ./src
