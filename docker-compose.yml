@@ -2,12 +2,14 @@ version: '3'
 
 services:
     http-server.magento2:
+      ports:
+        - "80:80"
       image: nginx:1.13.0
       working_dir: /var/application
       volumes:
-        - ./:/var/application
-        - ./nginx-custom/nginx.conf:/etc/nginx/conf.d/default.conf
-        - /etc/hosts:/etc/hosthosts
+        - ./:/var/application:delegated
+        - ./nginx-custom/nginx.conf:/etc/nginx/conf.d/default.conf:delegated
+        - /etc/hosts:/etc/hosthosts:delegated
       command: sh ./start_up_http_server.sh
       links:
         - worker.magento2
@@ -16,8 +18,8 @@ services:
       working_dir: /var/application
       command: sh ./start_up_worker.sh ;
       volumes:
-        - ./:/var/application
-        - ./php-fpm-custom/php.ini:/usr/local/etc/php/php.ini
+        - ./:/var/application:delegated
+        - ./php-fpm-custom/php.ini:/usr/local/etc/php/php.ini:delegated
       env_file:
         - ./install-magento.env
       links:
